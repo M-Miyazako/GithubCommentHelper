@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "Github Comment Helper",
+  "version": "1.0",
+  "description": "Githubのコメントで画像と動画をHTMLに変換する拡張機能",
+  "action": {},
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": ["storage", "activeTab", "tabs", "scripting", "contextMenus"],
+  "options_page": "options.html",
+  "content_scripts": [
+    {
+      "matches": ["https://github.com/*"],
+      "js": ["content.js"]
+    }
+  ]
+}
