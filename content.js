@@ -1,3 +1,5 @@
+// Chromeのi18n APIを使用して多言語対応を実装
+
 chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     if (request.action === "replaceMedia") {
         const activeElement = document.activeElement;

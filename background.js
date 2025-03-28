@@ -1,3 +1,26 @@
+// Chromeのi18n APIを使用して多言語対応を実装
+
+
+
+// コンテキストメニューのタイトルを更新する関数
+async function updateContextMenuTitles() {
+    // 既存のメニューを削除
+    chrome.contextMenus.removeAll();
+    
+    // 新しいメニューを作成
+    chrome.contextMenus.create({
+        id: "replaceMedia",
+        title: chrome.i18n.getMessage('replaceMediaTitle'),
+        contexts: ["selection"]
+    });
+    
+    chrome.contextMenus.create({
+        id: "convertToTable",
+        title: chrome.i18n.getMessage('convertToTableTitle'),
+        contexts: ["selection"]
+    });
+}
+
 chrome.action.onClicked.addListener((tab) => {
     if (tab && tab.id) {
         chrome.tabs.sendMessage(tab.id, { action: "replaceMedia" }).catch((error) => {
@@ -8,33 +31,34 @@ chrome.action.onClicked.addListener((tab) => {
     }
 });
 
+// コンテキストメニューのプロパティ
 const replaceMediaProperties = {
     id: "replaceMedia",
-    title: "選択したテキストをHTMLタグに置換",
+    title: chrome.i18n.getMessage('replaceMediaTitle'),
     contexts: ["selection"]
 };
 
 const convertToTableProperties = {
     id: "convertToTable",
-    title: "選択したテキストをマークダウンテーブルに変換",
+    title: chrome.i18n.getMessage('convertToTableTitle'),
     contexts: ["selection"]
 };
 
 const regex = /https:\/\/github\.com\/.*/;
 
+// 拡張機能インストール時の処理
 chrome.runtime.onInstalled.addListener(() => {
-    chrome.contextMenus.create(replaceMediaProperties);
-    chrome.contextMenus.create(convertToTableProperties);
+    updateContextMenuTitles();
 });
+
+
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     if(tab && tab.active) {
         if(tab.url.match(regex)) {
-            chrome.contextMenus.create(replaceMediaProperties, () => chrome.runtime.lastError);
-            chrome.contextMenus.create(convertToTableProperties, () => chrome.runtime.lastError);
+            updateContextMenuTitles();
         } else {
-            chrome.contextMenus.remove("replaceMedia", () => chrome.runtime.lastError);
-            chrome.contextMenus.remove("convertToTable", () => chrome.runtime.lastError);
+            chrome.contextMenus.removeAll(() => chrome.runtime.lastError);
         }
     }
 });
@@ -42,11 +66,9 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 chrome.tabs.onActivated.addListener((info) => {
     chrome.tabs.get(info.tabId, (tab) => {
         if(tab.url.match(regex)) {
-            chrome.contextMenus.create(replaceMediaProperties, () => chrome.runtime.lastError);
-            chrome.contextMenus.create(convertToTableProperties, () => chrome.runtime.lastError);
+            updateContextMenuTitles();
         } else {
-            chrome.contextMenus.remove("replaceMedia", () => chrome.runtime.lastError);
-            chrome.contextMenus.remove("convertToTable", () => chrome.runtime.lastError);
+            chrome.contextMenus.removeAll(() => chrome.runtime.lastError);
         }
     });
 });
@@ -54,11 +76,9 @@ chrome.tabs.onActivated.addListener((info) => {
 chrome.windows.onFocusChanged.addListener((info) => {
     chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
         if(tabs[0].url.match(regex)) {
-            chrome.contextMenus.create(replaceMediaProperties, () => chrome.runtime.lastError);
-            chrome.contextMenus.create(convertToTableProperties, () => chrome.runtime.lastError);
+            updateContextMenuTitles();
         } else {
-            chrome.contextMenus.remove("replaceMedia", () => chrome.runtime.lastError);
-            chrome.contextMenus.remove("convertToTable", () => chrome.runtime.lastError);
+            chrome.contextMenus.removeAll(() => chrome.runtime.lastError);
         }
     });
 });

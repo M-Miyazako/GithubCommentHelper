@@ -1,0 +1,50 @@
+{
+  "extensionName": {
+    "message": "Github Comment Helper",
+    "description": "拡張機能の名前"
+  },
+  "extensionDescription": {
+    "message": "Githubのコメントで画像と動画をHTMLに変換する拡張機能",
+    "description": "拡張機能の説明"
+  },
+  "replaceMediaTitle": {
+    "message": "選択したテキストをHTMLタグに置換",
+    "description": "マークダウンをHTMLに変換するコンテキストメニュー項目"
+  },
+  "convertToTableTitle": {
+    "message": "選択したテキストをマークダウンテーブルに変換",
+    "description": "テキストをマークダウンテーブルに変換するコンテキストメニュー項目"
+  },
+  "optionsTitle": {
+    "message": "オプション",
+    "description": "オプションページのタイトル"
+  },
+  "optionsHeader": {
+    "message": "オプション設定",
+    "description": "オプションページのヘッダー"
+  },
+  "imageWidthLabel": {
+    "message": "画像の幅 (px):",
+    "description": "画像幅入力のラベル"
+  },
+  "saveButton": {
+    "message": "保存",
+    "description": "保存ボタンのテキスト"
+  },
+  "savedMessage": {
+    "message": "設定が保存されました。",
+    "description": "設定が保存されたときに表示されるメッセージ"
+  },
+  "invalidNumberMessage": {
+    "message": "有効な数字を入力してください。",
+    "description": "無効な数値入力に対するエラーメッセージ"
+  },
+  "languageEn": {
+    "message": "英語",
+    "description": "英語の言語オプション"
+  },
+  "languageJa": {
+    "message": "日本語",
+    "description": "日本語の言語オプション"
+  }
+}

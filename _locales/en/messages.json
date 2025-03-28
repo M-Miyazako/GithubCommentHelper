@@ -1,0 +1,50 @@
+{
+  "extensionName": {
+    "message": "Github Comment Helper",
+    "description": "The name of the extension"
+  },
+  "extensionDescription": {
+    "message": "Convert images and videos to HTML in Github comments",
+    "description": "The description of the extension"
+  },
+  "replaceMediaTitle": {
+    "message": "Convert selected text to HTML tags",
+    "description": "Context menu item for converting markdown to HTML"
+  },
+  "convertToTableTitle": {
+    "message": "Convert selected text to markdown table",
+    "description": "Context menu item for converting text to markdown table"
+  },
+  "optionsTitle": {
+    "message": "Options",
+    "description": "Title of the options page"
+  },
+  "optionsHeader": {
+    "message": "Options Settings",
+    "description": "Header of the options page"
+  },
+  "imageWidthLabel": {
+    "message": "Image width (px):",
+    "description": "Label for image width input"
+  },
+  "saveButton": {
+    "message": "Save",
+    "description": "Save button text"
+  },
+  "savedMessage": {
+    "message": "Settings saved.",
+    "description": "Message shown when settings are saved"
+  },
+  "invalidNumberMessage": {
+    "message": "Please enter a valid number.",
+    "description": "Error message for invalid number input"
+  },
+  "languageEn": {
+    "message": "English",
+    "description": "English language option"
+  },
+  "languageJa": {
+    "message": "Japanese",
+    "description": "Japanese language option"
+  }
+}
