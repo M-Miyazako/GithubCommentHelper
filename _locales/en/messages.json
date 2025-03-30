@@ -27,6 +27,10 @@
     "message": "Image width (px):",
     "description": "Label for image width input"
   },
+  "videoWidthLabel": {
+    "message": "Video width (px):",
+    "description": "Label for video width input"
+  },
   "saveButton": {
     "message": "Save",
     "description": "Save button text"

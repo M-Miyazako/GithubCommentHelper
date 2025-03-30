@@ -27,6 +27,10 @@
     "message": "画像の幅 (px):",
     "description": "画像幅入力のラベル"
   },
+  "videoWidthLabel": {
+    "message": "動画の幅 (px):",
+    "description": "動画幅入力のラベル"
+  },
   "saveButton": {
     "message": "保存",
     "description": "保存ボタンのテキスト"

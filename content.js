@@ -63,8 +63,9 @@ function applyTextReplacement(resultText) {
 
 function replaceMedia(inputString) {
   return new Promise((resolve) => {
-    chrome.storage.sync.get(['imageWidth'], (result) => {
+    chrome.storage.sync.get(['imageWidth', 'videoWidth'], (result) => {
       let imageWidth = result.imageWidth ? ` width="${result.imageWidth}"` : '';
+      let videoWidth = result.videoWidth ? ` width="${result.videoWidth}"` : '';
       let outputString = inputString;
       if (outputString.includes('![')) {
         outputString = outputString.replace(/!\[(.*?)\]\((.*?)\)/g, `<img src="$2"${imageWidth} alt="$1">`);
@@ -116,7 +117,7 @@ function replaceMedia(inputString) {
         for (const match of matches) {
           if (!match.hasVideoTag) {
             outputString = outputString.substring(0, match.index) + 
-                          `<video src="${match.url}" />` + 
+                          `<video src="${match.url}"${videoWidth} />` + 
                           outputString.substring(match.index + match.fullMatch.length);
           }
         }
