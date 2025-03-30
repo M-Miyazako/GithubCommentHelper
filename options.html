@@ -12,7 +12,7 @@
             display: block;
             margin-bottom: 8px;
         }
-        input[type="number"], select {
+        input[type="number"], select, input[type="text"] {
             width: 200px;
             padding: 8px;
             margin-bottom: 16px;
@@ -23,12 +23,32 @@
             color: white;
             border: none;
             cursor: pointer;
+            margin-right: 10px;
         }
         button:hover {
             background-color: #45a049;
         }
         .option-group {
             margin-bottom: 20px;
+        }
+        #tableHeadersContainer {
+            margin-bottom: 10px;
+        }
+        .header-input-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .header-input-group input {
+            margin-right: 10px;
+            margin-bottom: 0;
+        }
+        .remove-header-btn {
+            background-color: #f44336;
+            padding: 4px 8px;
+        }
+        .remove-header-btn:hover {
+            background-color: #d32f2f;
         }
     </style>
 </head>
@@ -43,6 +63,12 @@
     <div class="option-group">
         <label for="videoWidth" id="videoWidthLabel">Video width (px):</label>
         <input type="number" id="videoWidth" name="videoWidth">
+    </div>
+    
+    <div class="option-group">
+        <label id="tableHeadersLabel">Table Headers:</label>
+        <div id="tableHeadersContainer"></div>
+        <button id="addHeaderBtn" type="button">Add Header</button>
     </div>
     
     <button id="saveButton">Save</button>

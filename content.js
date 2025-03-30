@@ -13,7 +13,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         applyTextReplacement(result);
     } else if (request.action === "convertToTable") {
         const selectedText = window.getSelection().toString();
-        const result = convertToMarkdownTable(selectedText);
+        const result = await convertToMarkdownTable(selectedText);
         applyTextReplacement(result);
     }
 });
@@ -128,17 +128,34 @@ function replaceMedia(inputString) {
 }
 
 function convertToMarkdownTable(text) {
-  const lines = text.trim().split('\n');
-  const columns = lines.length;
-
-  let table = '|' + ' |'.repeat(columns) + '\n';
-  table += '|' + ' :---: |'.repeat(columns) + '\n';
-  table += '|';
-
-  lines.forEach(line => {
-    table += ' ' + line.trim() + ' |';
+  return new Promise((resolve) => {
+    chrome.storage.sync.get(['tableHeaders'], (result) => {
+      const lines = text.trim().split('\n');
+      const dataCount = lines.length;
+      const tableHeaders = result.tableHeaders || [];
+      
+      // テーブルの列数を決定（データの数とヘッダーの数の大きい方）
+      const columnCount = Math.max(dataCount, tableHeaders.length);
+      
+      // テーブルのヘッダー行を作成
+      let table = '|';
+      for (let i = 0; i < columnCount; i++) {
+        const headerText = i < tableHeaders.length ? tableHeaders[i] : '';
+        table += ` ${headerText} |`;
+      }
+      table += '\n';
+      
+      // 区切り行を作成
+      table += '|' + ' :---: |'.repeat(columnCount) + '\n';
+      
+      // データ行を作成
+      table += '|';
+      for (let i = 0; i < columnCount; i++) {
+        const cellText = i < dataCount ? lines[i].trim() : '';
+        table += ` ${cellText} |`;
+      }
+      
+      resolve(table);
+    });
   });
-  table += '\n';
-  
-  return table;
 }

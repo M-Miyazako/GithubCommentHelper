@@ -46,5 +46,23 @@
   "languageJa": {
     "message": "日本語",
     "description": "日本語の言語オプション"
+  },
+  "tableHeadersLabel": {
+    "message": "テーブルヘッダー:",
+    "description": "テーブルヘッダー設定のラベル"
+  },
+  "addHeaderBtn": {
+    "message": "ヘッダーを追加",
+    "description": "ヘッダー追加ボタンのテキスト"
+  },
+  "headerPlaceholder": {
+    "message": "$columnNumber$列目のヘッダー名",
+    "description": "テーブルヘッダー入力欄のプレースホルダー",
+    "placeholders": {
+      "columnNumber": {
+        "content": "$1",
+        "example": "1"
+      }
+    }
   }
 }

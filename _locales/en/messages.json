@@ -46,5 +46,23 @@
   "languageJa": {
     "message": "Japanese",
     "description": "Japanese language option"
+  },
+  "tableHeadersLabel": {
+    "message": "Table Headers:",
+    "description": "Label for table headers setting"
+  },
+  "addHeaderBtn": {
+    "message": "Add Header",
+    "description": "Text for the add header button"
+  },
+  "headerPlaceholder": {
+    "message": "Header name for column $columnNumber$",
+    "description": "Placeholder for table header input field",
+    "placeholders": {
+      "columnNumber": {
+        "content": "$1",
+        "example": "1"
+      }
+    }
   }
 }
