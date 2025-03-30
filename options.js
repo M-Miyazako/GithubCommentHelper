@@ -9,6 +9,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const bulkAlignLeft = document.getElementById('bulkAlignLeft');
     const bulkAlignCenter = document.getElementById('bulkAlignCenter');
     const bulkAlignRight = document.getElementById('bulkAlignRight');
+    const defaultAlignLeft = document.getElementById('defaultAlignLeft');
+    const defaultAlignCenter = document.getElementById('defaultAlignCenter');
+    const defaultAlignRight = document.getElementById('defaultAlignRight');
 
     // i18nによるテキストの設定
     document.getElementById('pageTitle').textContent = chrome.i18n.getMessage('optionsTitle');
@@ -22,14 +25,33 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('bulkAlignLeftLabel').textContent = chrome.i18n.getMessage('alignmentLeft');
     document.getElementById('bulkAlignCenterLabel').textContent = chrome.i18n.getMessage('alignmentCenter');
     document.getElementById('bulkAlignRightLabel').textContent = chrome.i18n.getMessage('alignmentRight');
+    document.getElementById('defaultAlignmentLabel').textContent = chrome.i18n.getMessage('defaultAlignmentLabel');
+    document.getElementById('defaultAlignLeftLabel').textContent = chrome.i18n.getMessage('alignmentLeft');
+    document.getElementById('defaultAlignCenterLabel').textContent = chrome.i18n.getMessage('alignmentCenter');
+    document.getElementById('defaultAlignRightLabel').textContent = chrome.i18n.getMessage('alignmentRight');
 
     // ストレージから設定を読み込む
-    chrome.storage.sync.get(['imageWidth', 'videoWidth', 'tableHeaders', 'columnAlignments'], (result) => {
+    chrome.storage.sync.get(['imageWidth', 'videoWidth', 'tableHeaders', 'columnAlignments', 'defaultAlignment'], (result) => {
         if (result.imageWidth !== undefined) {
             imageWidthInput.value = result.imageWidth;
         }
         if (result.videoWidth !== undefined) {
             videoWidthInput.value = result.videoWidth;
+        }
+        
+        // デフォルトの寄せ方向を設定
+        const defaultAlignment = result.defaultAlignment || 'center';
+        switch (defaultAlignment) {
+            case 'left':
+                defaultAlignLeft.checked = true;
+                break;
+            case 'right':
+                defaultAlignRight.checked = true;
+                break;
+            case 'center':
+            default:
+                defaultAlignCenter.checked = true;
+                break;
         }
         
         // テーブルヘッダーと寄せ方向の読み込みと表示
@@ -43,12 +65,12 @@ document.addEventListener('DOMContentLoaded', () => {
             
             for (let i = 0; i < itemCount; i++) {
                 const headerValue = i < tableHeaders.length ? tableHeaders[i] : '';
-                const alignmentValue = i < columnAlignments.length ? columnAlignments[i] : 'center';
+                const alignmentValue = i < columnAlignments.length ? columnAlignments[i] : defaultAlignment;
                 addHeaderInput(i, headerValue, alignmentValue);
             }
         } else {
             // 設定がない場合は空の入力欄を一つ追加
-            addHeaderInput(0, '', 'center');
+            addHeaderInput(0, '', defaultAlignment);
         }
     });
 
@@ -177,7 +199,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // ヘッダー追加ボタンのイベントリスナー
     addHeaderBtn.addEventListener('click', () => {
         const headerGroups = tableHeadersContainer.querySelectorAll('.header-input-group');
-        addHeaderInput(headerGroups.length);
+        // デフォルト寄せ方向を取得
+        let defaultAlignment = 'center';
+        if (defaultAlignLeft.checked) {
+            defaultAlignment = 'left';
+        } else if (defaultAlignRight.checked) {
+            defaultAlignment = 'right';
+        }
+        addHeaderInput(headerGroups.length, '', defaultAlignment);
     });
 
     // 保存ボタンがクリックされたときの処理
@@ -197,6 +226,16 @@ document.addEventListener('DOMContentLoaded', () => {
             const checkedRadio = group.querySelector('input[type="radio"]:checked');
             columnAlignments.push(checkedRadio ? checkedRadio.value : 'center');
         });
+        
+        // デフォルトの寄せ方向を取得
+        let defaultAlignment;
+        if (defaultAlignLeft.checked) {
+            defaultAlignment = 'left';
+        } else if (defaultAlignRight.checked) {
+            defaultAlignment = 'right';
+        } else {
+            defaultAlignment = 'center';
+        }
         
         // 保存するデータのオブジェクトを作成
         const dataToSave = {};
@@ -238,6 +277,9 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             keysToRemove.push('columnAlignments');
         }
+        
+        // デフォルトの寄せ方向を保存
+        dataToSave.defaultAlignment = defaultAlignment;
         
         // 保存完了メッセージを表示（非同期処理の完了後に表示）
         Promise.all([

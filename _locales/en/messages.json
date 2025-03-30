@@ -84,5 +84,9 @@
   "alignmentBulkLabel": {
     "message": "Bulk Setting:",
     "description": "Label for bulk alignment setting"
+  },
+  "defaultAlignmentLabel": {
+    "message": "Default Column Alignment:",
+    "description": "Label for default column alignment setting"
   }
 }

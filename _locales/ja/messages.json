@@ -84,5 +84,9 @@
   "alignmentBulkLabel": {
     "message": "一括設定:",
     "description": "寄せ方向の一括設定ラベル"
+  },
+  "defaultAlignmentLabel": {
+    "message": "デフォルトの寄せ方向:",
+    "description": "デフォルトの列の寄せ方向設定のラベル"
   }
 }

@@ -129,11 +129,12 @@ function replaceMedia(inputString) {
 
 function convertToMarkdownTable(text) {
   return new Promise((resolve) => {
-    chrome.storage.sync.get(['tableHeaders', 'columnAlignments'], (result) => {
+    chrome.storage.sync.get(['tableHeaders', 'columnAlignments', 'defaultAlignment'], (result) => {
       const lines = text.trim().split('\n');
       const dataCount = lines.length;
       const tableHeaders = result.tableHeaders || [];
       const columnAlignments = result.columnAlignments || [];
+      const defaultAlignment = result.defaultAlignment || 'center';
       
       // テーブルの列数を決定（データの数とヘッダーの数の大きい方）
       const columnCount = Math.max(dataCount, tableHeaders.length);
@@ -149,7 +150,8 @@ function convertToMarkdownTable(text) {
       // 区切り行を作成（寄せ方向に応じて記述）
       table += '|';
       for (let i = 0; i < columnCount; i++) {
-        const alignment = i < columnAlignments.length ? columnAlignments[i] : 'center';
+        // 寄せ方向が設定されていない場合はデフォルト値を使用
+        const alignment = i < columnAlignments.length ? columnAlignments[i] : defaultAlignment;
         let alignmentMark;
         
         switch (alignment) {
