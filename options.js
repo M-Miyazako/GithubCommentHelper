@@ -24,18 +24,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 保存ボタンがクリックされたときの処理
     saveButton.addEventListener('click', () => {
-        const imageWidthValue = parseInt(imageWidthInput.value, 10);
-        const videoWidthValue = parseInt(videoWidthInput.value, 10);
+        // 入力値を取得
+        let imageWidthValue = parseInt(imageWidthInput.value, 10);
+        let videoWidthValue = parseInt(videoWidthInput.value, 10);
         
-        if (!isNaN(imageWidthValue) && !isNaN(videoWidthValue)) {
-            chrome.storage.sync.set({ 
-                imageWidth: imageWidthValue,
-                videoWidth: videoWidthValue
-            }, () => {
-                alert(chrome.i18n.getMessage('savedMessage'));
-            });
+        // 保存するデータのオブジェクトを作成
+        const dataToSave = {};
+        
+        // 削除するキーの配列
+        const keysToRemove = [];
+        
+        // 数値変換に成功し、値が0より大きい場合のみ保存する
+        // それ以外の場合はキーを削除リストに追加
+        if (!isNaN(imageWidthValue) && imageWidthValue > 0) {
+            dataToSave.imageWidth = imageWidthValue;
         } else {
-            alert(chrome.i18n.getMessage('invalidNumberMessage'));
+            keysToRemove.push('imageWidth');
         }
+        
+        if (!isNaN(videoWidthValue) && videoWidthValue > 0) {
+            dataToSave.videoWidth = videoWidthValue;
+        } else {
+            keysToRemove.push('videoWidth');
+        }
+        
+        // 保存完了メッセージを表示（非同期処理の完了後に表示）
+        Promise.all([
+            Object.keys(dataToSave).length > 0 ? new Promise(resolve => chrome.storage.sync.set(dataToSave, resolve)) : Promise.resolve(),
+            keysToRemove.length > 0 ? new Promise(resolve => chrome.storage.sync.remove(keysToRemove, resolve)) : Promise.resolve()
+        ]).then(() => {
+            alert(chrome.i18n.getMessage('savedMessage'));
+        });
     });
 });

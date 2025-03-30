@@ -39,10 +39,6 @@
     "message": "設定が保存されました。",
     "description": "設定が保存されたときに表示されるメッセージ"
   },
-  "invalidNumberMessage": {
-    "message": "有効な数字を入力してください。",
-    "description": "無効な数値入力に対するエラーメッセージ"
-  },
   "languageEn": {
     "message": "英語",
     "description": "英語の言語オプション"

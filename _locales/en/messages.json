@@ -39,10 +39,6 @@
     "message": "Settings saved.",
     "description": "Message shown when settings are saved"
   },
-  "invalidNumberMessage": {
-    "message": "Please enter a valid number.",
-    "description": "Error message for invalid number input"
-  },
   "languageEn": {
     "message": "English",
     "description": "English language option"
