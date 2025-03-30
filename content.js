@@ -70,7 +70,56 @@ function replaceMedia(inputString) {
         outputString = outputString.replace(/!\[(.*?)\]\((.*?)\)/g, `<img src="$2"${imageWidth} alt="$1">`);
       }
       if (outputString.includes('https://github.com/user-attachments/assets/')) {
-        outputString = outputString.replace(/(https:\/\/github\.com\/user-attachments\/assets\/[^\s]+)/g, '<video src="$1" />');
+        // URL付き動画タグとスタンドアロンURLの両方を抽出する
+        const videoTagRegex = /<video[^>]*src=["'](https:\/\/github\.com\/user-attachments\/assets\/[^"']+)["'][^>]*\/?>/g;
+        const urlRegex = /(https:\/\/github\.com\/user-attachments\/assets\/[^\s<>"']+)/g;
+        
+        // 動画のタグとURLの一致をすべて見つける
+        const matches = [];
+        let match;
+        
+        // 動画タグをすべて見つける
+        while ((match = videoTagRegex.exec(outputString)) !== null) {
+          matches.push({
+            fullMatch: match[0],
+            url: match[1],
+            hasVideoTag: true,
+            index: match.index
+          });
+        }
+        
+        // URLをすべて見つける
+        urlRegex.lastIndex = 0;
+        while ((match = urlRegex.exec(outputString)) !== null) {
+          // URLが動画タグの一部でないかチェック
+          const isInVideoTag = matches.some(m => 
+            m.hasVideoTag && 
+            m.url === match[0] && 
+            m.index <= match.index && 
+            m.index + m.fullMatch.length >= match.index + match[0].length
+          );
+          
+          if (!isInVideoTag) {
+            matches.push({
+              fullMatch: match[0],
+              url: match[0],
+              hasVideoTag: false,
+              index: match.index
+            });
+          }
+        }
+        
+        // 置換時にインデックスの問題を回避するために、マッチを逆順に並べ替える
+        matches.sort((a, b) => b.index - a.index);
+        
+        // 動画タグでないURLのみを置換
+        for (const match of matches) {
+          if (!match.hasVideoTag) {
+            outputString = outputString.substring(0, match.index) + 
+                          `<video src="${match.url}" />` + 
+                          outputString.substring(match.index + match.fullMatch.length);
+          }
+        }
       }
       resolve(outputString);
     });
@@ -92,4 +141,3 @@ function convertToMarkdownTable(text) {
   
   return table;
 }
-
