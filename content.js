@@ -6,7 +6,7 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         if (activeElement && activeElement.value) {
             const result = await replaceMedia(activeElement.value);
             activeElement.value = result;
-            
+
             // 変更イベントを発火させる
             const inputEvent = new Event('input', { bubbles: true });
             activeElement.dispatchEvent(inputEvent);
@@ -62,20 +62,20 @@ function replaceMedia(inputString) {
         outputString = outputString.replace(/!\[(.*?)\]\((.*?)\)/g, `<img src="$2"${imageWidth} alt="$1">`);
       }
       if (outputString.includes('https://github.com/user-attachments/assets/')) {
-        // URL付き動画タグとスタンドアロンURLの両方を抽出する
-        const videoTagRegex = /<video[^>]*src=["'](https:\/\/github\.com\/user-attachments\/assets\/[^"']+)["'][^>]*\/?>/g;
+        // URL付き画像/動画タグとスタンドアロンURLの両方を抽出する
+        const tagReges = /<(img|video)[^>]*src=["'](https:\/\/github\.com\/user-attachments\/assets\/[^"']+)["'][^>]*\/?>/g;
         const urlRegex = /(https:\/\/github\.com\/user-attachments\/assets\/[^\s<>"']+)/g;
         
-        // 動画のタグとURLの一致をすべて見つける
+        // 画像/動画のタグとURLの一致をすべて見つける
         const matches = [];
         let match;
         
-        // 動画タグをすべて見つける
-        while ((match = videoTagRegex.exec(outputString)) !== null) {
+        // 画像/動画タグをすべて見つける
+        while ((match = tagReges.exec(outputString)) !== null) {
           matches.push({
             fullMatch: match[0],
-            url: match[1],
-            hasVideoTag: true,
+            url: match[2],
+            hasTag: true,
             index: match.index
           });
         }
@@ -83,19 +83,19 @@ function replaceMedia(inputString) {
         // URLをすべて見つける
         urlRegex.lastIndex = 0;
         while ((match = urlRegex.exec(outputString)) !== null) {
-          // URLが動画タグの一部でないかチェック
-          const isInVideoTag = matches.some(m => 
-            m.hasVideoTag && 
+          // URLが画像/動画タグの一部でないかチェック
+          const isInTag = matches.some(m => 
+            m.hasTag && 
             m.url === match[0] && 
             m.index <= match.index && 
             m.index + m.fullMatch.length >= match.index + match[0].length
           );
           
-          if (!isInVideoTag) {
+          if (!isInTag) {
             matches.push({
               fullMatch: match[0],
               url: match[0],
-              hasVideoTag: false,
+              hasTag: false,
               index: match.index
             });
           }
@@ -104,9 +104,9 @@ function replaceMedia(inputString) {
         // 置換時にインデックスの問題を回避するために、マッチを逆順に並べ替える
         matches.sort((a, b) => b.index - a.index);
         
-        // 動画タグでないURLのみを置換
+        // 画像/動画タグでないURLのみを置換
         for (const match of matches) {
-          if (!match.hasVideoTag) {
+          if (!match.hasTag) {
             outputString = outputString.substring(0, match.index) + 
                           `<video src="${match.url}"${videoWidth} />` + 
                           outputString.substring(match.index + match.fullMatch.length);
