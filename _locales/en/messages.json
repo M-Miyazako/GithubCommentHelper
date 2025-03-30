@@ -4,7 +4,7 @@
     "description": "The name of the extension"
   },
   "extensionDescription": {
-    "message": "Convert images and videos to HTML in Github comments",
+    "message": "Enhance GitHub comments with HTML media conversion and markdown table formatting tools",
     "description": "The description of the extension"
   },
   "replaceMediaTitle": {
