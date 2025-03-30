@@ -6,6 +6,10 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         if (activeElement && activeElement.value) {
             const result = await replaceMedia(activeElement.value);
             activeElement.value = result;
+            
+            // 変更イベントを発火させる
+            const inputEvent = new Event('input', { bubbles: true });
+            activeElement.dispatchEvent(inputEvent);
         }
     } else if (request.action === "replaceSelectedText") {
         const selectedText = window.getSelection().toString();
@@ -41,6 +45,10 @@ function applyTextReplacement(resultText) {
         
         activeElement.value = before + resultText + after;
         activeElement.selectionStart = activeElement.selectionEnd = start + resultText.length;
+        
+        // 変更イベントを発火させる
+        const inputEvent = new Event('input', { bubbles: true });
+        activeElement.dispatchEvent(inputEvent);
     }
 }
 
