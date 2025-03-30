@@ -20,12 +20,11 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
 /**
  * 選択範囲にテキストを適用する関数
- * activeElementから選択範囲を取得できない場合は、windowのselectionを使用
+ * activeElementから選択範囲を取得できない場合はスキップ
  * @param {string} resultText - 適用するテキスト
  */
 function applyTextReplacement(resultText) {
     const activeElement = document.activeElement;
-    const selection = window.getSelection();
     
     // activeElementから選択範囲を取得できるか確認
     if (activeElement && 
@@ -42,22 +41,6 @@ function applyTextReplacement(resultText) {
         
         activeElement.value = before + resultText + after;
         activeElement.selectionStart = activeElement.selectionEnd = start + resultText.length;
-    } 
-    // activeElementから取得できない場合はwindow.selectionを使用
-    else if (selection && !selection.isCollapsed) {
-        const range = selection.getRangeAt(0);
-        
-        // 選択範囲を削除して新しいテキストを挿入
-        range.deleteContents();
-        const textNode = document.createTextNode(resultText);
-        range.insertNode(textNode);
-        
-        // 選択範囲を挿入したテキストの後ろに移動
-        selection.removeAllRanges();
-        const newRange = document.createRange();
-        newRange.setStartAfter(textNode);
-        newRange.setEndAfter(textNode);
-        selection.addRange(newRange);
     }
 }
 
