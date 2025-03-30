@@ -64,5 +64,25 @@
         "example": "1"
       }
     }
+  },
+  "columnAlignmentLabel": {
+    "message": "列の寄せ方向:",
+    "description": "列の寄せ方向設定のラベル"
+  },
+  "alignmentLeft": {
+    "message": "左寄せ",
+    "description": "左寄せのラジオボタンラベル"
+  },
+  "alignmentCenter": {
+    "message": "中央寄せ",
+    "description": "中央寄せのラジオボタンラベル"
+  },
+  "alignmentRight": {
+    "message": "右寄せ",
+    "description": "右寄せのラジオボタンラベル"
+  },
+  "alignmentBulkLabel": {
+    "message": "一括設定:",
+    "description": "寄せ方向の一括設定ラベル"
   }
 }

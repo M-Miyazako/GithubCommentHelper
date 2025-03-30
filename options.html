@@ -50,6 +50,26 @@
         .remove-header-btn:hover {
             background-color: #d32f2f;
         }
+        .radio-group {
+            display: flex;
+            margin-bottom: 8px;
+            align-items: center;
+        }
+        .radio-group label {
+            margin-right: 15px;
+            margin-bottom: 0;
+            display: inline-block;
+        }
+        .alignment-options {
+            display: flex;
+            flex-direction: column;
+            margin-left: 10px;
+        }
+        .bulk-alignment {
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
     </style>
 </head>
 <body>
@@ -69,6 +89,24 @@
         <label id="tableHeadersLabel">Table Headers:</label>
         <div id="tableHeadersContainer"></div>
         <button id="addHeaderBtn" type="button">Add Header</button>
+    </div>
+    
+    <div class="option-group bulk-alignment">
+        <label id="alignmentBulkLabel">Bulk Setting:</label>
+        <div class="radio-group">
+            <label>
+                <input type="radio" name="bulkAlignment" value="left" id="bulkAlignLeft">
+                <span id="bulkAlignLeftLabel">Left</span>
+            </label>
+            <label>
+                <input type="radio" name="bulkAlignment" value="center" id="bulkAlignCenter" checked>
+                <span id="bulkAlignCenterLabel">Center</span>
+            </label>
+            <label>
+                <input type="radio" name="bulkAlignment" value="right" id="bulkAlignRight">
+                <span id="bulkAlignRightLabel">Right</span>
+            </label>
+        </div>
     </div>
     
     <button id="saveButton">Save</button>

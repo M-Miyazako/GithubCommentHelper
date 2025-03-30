@@ -64,5 +64,25 @@
         "example": "1"
       }
     }
+  },
+  "columnAlignmentLabel": {
+    "message": "Column Alignment:",
+    "description": "Label for column alignment setting"
+  },
+  "alignmentLeft": {
+    "message": "Left",
+    "description": "Label for left alignment radio button"
+  },
+  "alignmentCenter": {
+    "message": "Center",
+    "description": "Label for center alignment radio button"
+  },
+  "alignmentRight": {
+    "message": "Right",
+    "description": "Label for right alignment radio button"
+  },
+  "alignmentBulkLabel": {
+    "message": "Bulk Setting:",
+    "description": "Label for bulk alignment setting"
   }
 }

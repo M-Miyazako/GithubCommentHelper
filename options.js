@@ -6,6 +6,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const saveButton = document.getElementById('saveButton');
     const tableHeadersContainer = document.getElementById('tableHeadersContainer');
     const addHeaderBtn = document.getElementById('addHeaderBtn');
+    const bulkAlignLeft = document.getElementById('bulkAlignLeft');
+    const bulkAlignCenter = document.getElementById('bulkAlignCenter');
+    const bulkAlignRight = document.getElementById('bulkAlignRight');
 
     // i18nによるテキストの設定
     document.getElementById('pageTitle').textContent = chrome.i18n.getMessage('optionsTitle');
@@ -15,9 +18,13 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('tableHeadersLabel').textContent = chrome.i18n.getMessage('tableHeadersLabel');
     document.getElementById('addHeaderBtn').textContent = chrome.i18n.getMessage('addHeaderBtn');
     document.getElementById('saveButton').textContent = chrome.i18n.getMessage('saveButton');
+    document.getElementById('alignmentBulkLabel').textContent = chrome.i18n.getMessage('alignmentBulkLabel');
+    document.getElementById('bulkAlignLeftLabel').textContent = chrome.i18n.getMessage('alignmentLeft');
+    document.getElementById('bulkAlignCenterLabel').textContent = chrome.i18n.getMessage('alignmentCenter');
+    document.getElementById('bulkAlignRightLabel').textContent = chrome.i18n.getMessage('alignmentRight');
 
     // ストレージから設定を読み込む
-    chrome.storage.sync.get(['imageWidth', 'videoWidth', 'tableHeaders'], (result) => {
+    chrome.storage.sync.get(['imageWidth', 'videoWidth', 'tableHeaders', 'columnAlignments'], (result) => {
         if (result.imageWidth !== undefined) {
             imageWidthInput.value = result.imageWidth;
         }
@@ -25,20 +32,43 @@ document.addEventListener('DOMContentLoaded', () => {
             videoWidthInput.value = result.videoWidth;
         }
         
-        // テーブルヘッダーの読み込みと表示
+        // テーブルヘッダーと寄せ方向の読み込みと表示
         const tableHeaders = result.tableHeaders || [];
-        tableHeaders.forEach((header, index) => {
-            addHeaderInput(index, header);
-        });
+        const columnAlignments = result.columnAlignments || [];
         
-        // ヘッダーが一つもない場合は空の入力欄を一つ追加
-        if (tableHeaders.length === 0) {
-            addHeaderInput(0, '');
+        // ヘッダーまたは寄せ方向の設定がある場合は表示
+        if (tableHeaders.length > 0 || columnAlignments.length > 0) {
+            // 表示する項目数を決定（ヘッダーと寄せ方向の数の大きい方）
+            const itemCount = Math.max(tableHeaders.length, columnAlignments.length);
+            
+            for (let i = 0; i < itemCount; i++) {
+                const headerValue = i < tableHeaders.length ? tableHeaders[i] : '';
+                const alignmentValue = i < columnAlignments.length ? columnAlignments[i] : 'center';
+                addHeaderInput(i, headerValue, alignmentValue);
+            }
+        } else {
+            // 設定がない場合は空の入力欄を一つ追加
+            addHeaderInput(0, '', 'center');
         }
     });
 
+    // 一括設定ラジオボタンのイベントリスナー
+    bulkAlignLeft.addEventListener('click', () => applyBulkAlignment('left'));
+    bulkAlignCenter.addEventListener('click', () => applyBulkAlignment('center'));
+    bulkAlignRight.addEventListener('click', () => applyBulkAlignment('right'));
+    
+    // 一括で寄せ方向を適用する関数
+    function applyBulkAlignment(alignment) {
+        const alignmentRadios = document.querySelectorAll('.column-alignment');
+        alignmentRadios.forEach(radio => {
+            if (radio.value === alignment) {
+                radio.checked = true;
+            }
+        });
+    }
+
     // ヘッダー入力欄を追加する関数
-    function addHeaderInput(index, value = '') {
+    function addHeaderInput(index, value = '', alignment = 'center') {
         const headerGroup = document.createElement('div');
         headerGroup.className = 'header-input-group';
         headerGroup.dataset.index = index;
@@ -54,6 +84,61 @@ document.addEventListener('DOMContentLoaded', () => {
             input.placeholder = placeholderText;
         }
         
+        // 寄せ方向のラジオグループを作成
+        const alignmentDiv = document.createElement('div');
+        alignmentDiv.className = 'alignment-options';
+        
+        const alignmentLabel = document.createElement('label');
+        alignmentLabel.textContent = chrome.i18n.getMessage('columnAlignmentLabel');
+        alignmentDiv.appendChild(alignmentLabel);
+        
+        const radioGroup = document.createElement('div');
+        radioGroup.className = 'radio-group';
+        
+        // 左寄せラジオボタン
+        const leftLabel = document.createElement('label');
+        const leftRadio = document.createElement('input');
+        leftRadio.type = 'radio';
+        leftRadio.name = `alignment-${index}`;
+        leftRadio.className = 'column-alignment';
+        leftRadio.value = 'left';
+        if (alignment === 'left') leftRadio.checked = true;
+        const leftSpan = document.createElement('span');
+        leftSpan.textContent = chrome.i18n.getMessage('alignmentLeft');
+        leftLabel.appendChild(leftRadio);
+        leftLabel.appendChild(leftSpan);
+        
+        // 中央寄せラジオボタン
+        const centerLabel = document.createElement('label');
+        const centerRadio = document.createElement('input');
+        centerRadio.type = 'radio';
+        centerRadio.name = `alignment-${index}`;
+        centerRadio.className = 'column-alignment';
+        centerRadio.value = 'center';
+        if (alignment === 'center') centerRadio.checked = true;
+        const centerSpan = document.createElement('span');
+        centerSpan.textContent = chrome.i18n.getMessage('alignmentCenter');
+        centerLabel.appendChild(centerRadio);
+        centerLabel.appendChild(centerSpan);
+        
+        // 右寄せラジオボタン
+        const rightLabel = document.createElement('label');
+        const rightRadio = document.createElement('input');
+        rightRadio.type = 'radio';
+        rightRadio.name = `alignment-${index}`;
+        rightRadio.className = 'column-alignment';
+        rightRadio.value = 'right';
+        if (alignment === 'right') rightRadio.checked = true;
+        const rightSpan = document.createElement('span');
+        rightSpan.textContent = chrome.i18n.getMessage('alignmentRight');
+        rightLabel.appendChild(rightRadio);
+        rightLabel.appendChild(rightSpan);
+        
+        radioGroup.appendChild(leftLabel);
+        radioGroup.appendChild(centerLabel);
+        radioGroup.appendChild(rightLabel);
+        alignmentDiv.appendChild(radioGroup);
+        
         const removeBtn = document.createElement('button');
         removeBtn.className = 'remove-header-btn';
         removeBtn.textContent = '✕';
@@ -63,6 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         
         headerGroup.appendChild(input);
+        headerGroup.appendChild(alignmentDiv);
         headerGroup.appendChild(removeBtn);
         tableHeadersContainer.appendChild(headerGroup);
     }
@@ -72,7 +158,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const headerGroups = tableHeadersContainer.querySelectorAll('.header-input-group');
         headerGroups.forEach((group, index) => {
             group.dataset.index = index;
-            const input = group.querySelector('input');
+            const input = group.querySelector('input.header-input');
+            const radios = group.querySelectorAll('input[type="radio"]');
+            
+            // ラジオボタンのname属性を更新
+            radios.forEach(radio => {
+                radio.name = `alignment-${index}`;
+            });
             
             // プレースホルダーの多言語対応（第二引数でパラメータを渡す）
             const placeholderText = chrome.i18n.getMessage('headerPlaceholder', [index + 1]);
@@ -98,6 +190,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const headerInputs = document.querySelectorAll('.header-input');
         const tableHeaders = Array.from(headerInputs).map(input => input.value.trim());
         
+        // 列の寄せ方向を取得
+        const columnAlignments = [];
+        const headerGroups = tableHeadersContainer.querySelectorAll('.header-input-group');
+        headerGroups.forEach(group => {
+            const checkedRadio = group.querySelector('input[type="radio"]:checked');
+            columnAlignments.push(checkedRadio ? checkedRadio.value : 'center');
+        });
+        
         // 保存するデータのオブジェクトを作成
         const dataToSave = {};
         
@@ -118,11 +218,25 @@ document.addEventListener('DOMContentLoaded', () => {
             keysToRemove.push('videoWidth');
         }
         
-        // テーブルヘッダーが空でない場合のみ保存
+        // テーブルヘッダーと寄せ方向の保存条件を分ける
+        // ヘッダーが空でない場合のみヘッダーを保存
         if (tableHeaders.length > 0 && tableHeaders.some(header => header !== '')) {
             dataToSave.tableHeaders = tableHeaders;
         } else {
             keysToRemove.push('tableHeaders');
+        }
+        
+        // 寄せ方向が設定されている場合は保存（ヘッダーが空でも保存）
+        if (columnAlignments.length > 0) {
+            // デフォルト値（すべて中央寄せ）と異なるか確認
+            const hasNonDefaultAlignment = columnAlignments.some(alignment => alignment !== 'center');
+            if (hasNonDefaultAlignment) {
+                dataToSave.columnAlignments = columnAlignments;
+            } else {
+                keysToRemove.push('columnAlignments');
+            }
+        } else {
+            keysToRemove.push('columnAlignments');
         }
         
         // 保存完了メッセージを表示（非同期処理の完了後に表示）
