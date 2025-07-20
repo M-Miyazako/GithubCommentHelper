@@ -15,6 +15,10 @@
     "message": "選択したテキストをマークダウンテーブルに変換",
     "description": "テキストをマークダウンテーブルに変換するコンテキストメニュー項目"
   },
+  "replaceMediaThenTableTitle": {
+    "message": "選択したテキストをHTMLタグに置換してからテーブルに変換",
+    "description": "メディアを変換してからマークダウンテーブルに変換するコンテキストメニュー項目"
+  },
   "optionsTitle": {
     "message": "オプション",
     "description": "オプションページのタイトル"

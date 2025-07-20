@@ -15,6 +15,10 @@
     "message": "Convert selected text to markdown table",
     "description": "Context menu item for converting text to markdown table"
   },
+  "replaceMediaThenTableTitle": {
+    "message": "Convert selected text to HTML tags then markdown table",
+    "description": "Context menu item for converting media then to markdown table"
+  },
   "optionsTitle": {
     "message": "Options",
     "description": "Title of the options page"

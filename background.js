@@ -19,6 +19,12 @@ async function updateContextMenuTitles() {
         title: chrome.i18n.getMessage('convertToTableTitle'),
         contexts: ["selection"]
     });
+    
+    chrome.contextMenus.create({
+        id: "replaceMediaThenTable",
+        title: chrome.i18n.getMessage('replaceMediaThenTableTitle'),
+        contexts: ["selection"]
+    });
 }
 
 chrome.action.onClicked.addListener((tab) => {
@@ -90,6 +96,10 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
         });
     } else if (info.menuItemId === "convertToTable" && info.selectionText) {
         chrome.tabs.sendMessage(tab.id, { action: "convertToTable" }).catch((error) => {
+            console.error("メッセージ送信に失敗しました:", error);
+        });
+    } else if (info.menuItemId === "replaceMediaThenTable" && info.selectionText) {
+        chrome.tabs.sendMessage(tab.id, { action: "replaceMediaThenTable" }).catch((error) => {
             console.error("メッセージ送信に失敗しました:", error);
         });
     }

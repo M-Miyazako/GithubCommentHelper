@@ -19,6 +19,13 @@ chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
         const selectedText = window.getSelection().toString();
         const result = await convertToMarkdownTable(selectedText);
         applyTextReplacement(result);
+    } else if (request.action === "replaceMediaThenTable") {
+        const selectedText = window.getSelection().toString();
+        // まずメディア変換を実行
+        const mediaConverted = await replaceMedia(selectedText);
+        // 次にテーブル変換を実行
+        const tableConverted = await convertToMarkdownTable(mediaConverted);
+        applyTextReplacement(tableConverted);
     }
 });
 
