@@ -92,5 +92,13 @@
   "defaultAlignmentLabel": {
     "message": "Default Column Alignment:",
     "description": "Label for default column alignment setting"
+  },
+  "overwriteSettingsLabel": {
+    "message": "Overwrite existing width/height:",
+    "description": "Label for overwriting existing tag width/height attributes"
+  },
+  "overwriteExistingLabel": {
+    "message": "Overwrite width and height of existing img/video tags",
+    "description": "Label for overwrite existing tags checkbox"
   }
 }

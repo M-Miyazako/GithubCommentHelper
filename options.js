@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const defaultAlignLeft = document.getElementById('defaultAlignLeft');
     const defaultAlignCenter = document.getElementById('defaultAlignCenter');
     const defaultAlignRight = document.getElementById('defaultAlignRight');
+    const overwriteExistingCheckbox = document.getElementById('overwriteExisting');
 
     // i18nによるテキストの設定
     document.getElementById('pageTitle').textContent = chrome.i18n.getMessage('optionsTitle');
@@ -29,14 +30,23 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('defaultAlignLeftLabel').textContent = chrome.i18n.getMessage('alignmentLeft');
     document.getElementById('defaultAlignCenterLabel').textContent = chrome.i18n.getMessage('alignmentCenter');
     document.getElementById('defaultAlignRightLabel').textContent = chrome.i18n.getMessage('alignmentRight');
+    document.getElementById('overwriteSettingsLabel').textContent = chrome.i18n.getMessage('overwriteSettingsLabel');
+    document.getElementById('overwriteExistingLabel').textContent = chrome.i18n.getMessage('overwriteExistingLabel');
 
     // ストレージから設定を読み込む
-    chrome.storage.sync.get(['imageWidth', 'videoWidth', 'tableHeaders', 'columnAlignments', 'defaultAlignment'], (result) => {
+    chrome.storage.sync.get(['imageWidth', 'videoWidth', 'tableHeaders', 'columnAlignments', 'defaultAlignment', 'overwriteExisting'], (result) => {
         if (result.imageWidth !== undefined) {
             imageWidthInput.value = result.imageWidth;
         }
         if (result.videoWidth !== undefined) {
             videoWidthInput.value = result.videoWidth;
+        }
+        
+        // overwriteExisting設定の読み込み（デフォルトはtrue）
+        if (result.overwriteExisting !== undefined) {
+            overwriteExistingCheckbox.checked = result.overwriteExisting;
+        } else {
+            overwriteExistingCheckbox.checked = true; // デフォルトで有効
         }
         
         // デフォルトの寄せ方向を設定
@@ -280,6 +290,9 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // デフォルトの寄せ方向を保存
         dataToSave.defaultAlignment = defaultAlignment;
+        
+        // overwriteExisting設定を保存
+        dataToSave.overwriteExisting = overwriteExistingCheckbox.checked;
         
         // 保存完了メッセージを表示（非同期処理の完了後に表示）
         Promise.all([

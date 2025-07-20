@@ -61,10 +61,40 @@ function applyTextReplacement(resultText) {
 
 function replaceMedia(inputString) {
   return new Promise((resolve) => {
-    chrome.storage.sync.get(['imageWidth', 'videoWidth'], (result) => {
+    chrome.storage.sync.get(['imageWidth', 'videoWidth', 'overwriteExisting'], (result) => {
       let imageWidth = result.imageWidth ? ` width="${result.imageWidth}"` : '';
       let videoWidth = result.videoWidth ? ` width="${result.videoWidth}"` : '';
+      let overwriteExisting = result.overwriteExisting !== undefined ? result.overwriteExisting : true; // デフォルトはtrue
       let outputString = inputString;
+      // 既存のimgタグの幅/高さを上書きする処理
+      if (overwriteExisting) {
+        // imgタグの処理
+        outputString = outputString.replace(/<img([^>]*?)>/g, (match, attributes) => {
+          // 既存のwidth/height属性を削除
+          let newAttributes = attributes.replace(/\s*(width|height)=["'][^"']*["']/gi, '');
+          
+          // 新しいwidth属性を追加（設定されている場合）
+          if (result.imageWidth) {
+            newAttributes += ` width="${result.imageWidth}"`;
+          }
+          
+          return `<img${newAttributes}>`;
+        });
+        
+        // videoタグの処理
+        outputString = outputString.replace(/<video([^>]*?)(\s*\/?>|\s*>[\s\S]*?<\/video>)/g, (match, attributes, closing) => {
+          // 既存のwidth/height属性を削除
+          let newAttributes = attributes.replace(/\s*(width|height)=["'][^"']*["']/gi, '');
+          
+          // 新しいwidth属性を追加（設定されている場合）
+          if (result.videoWidth) {
+            newAttributes += ` width="${result.videoWidth}"`;
+          }
+          
+          return `<video${newAttributes}${closing}`;
+        });
+      }
+      
       if (outputString.includes('![')) {
         outputString = outputString.replace(/!\[(.*?)\]\((.*?)\)/g, `<img src="$2"${imageWidth} alt="$1">`);
       }

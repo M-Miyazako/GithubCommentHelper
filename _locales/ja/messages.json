@@ -92,5 +92,13 @@
   "defaultAlignmentLabel": {
     "message": "デフォルトの寄せ方向:",
     "description": "デフォルトの列の寄せ方向設定のラベル"
+  },
+  "overwriteSettingsLabel": {
+    "message": "既存の幅/高さの上書き:",
+    "description": "既存のタグの幅/高さ属性を上書きする設定のラベル"
+  },
+  "overwriteExistingLabel": {
+    "message": "既存のimg/videoタグの幅と高さを上書きする",
+    "description": "既存のタグの上書きチェックボックスのラベル"
   }
 }
