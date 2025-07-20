@@ -9,7 +9,8 @@ A Chrome extension that enhances your GitHub commenting experience with useful f
 ### 1. Media Conversion
 - Automatically converts Markdown image links (`![alt](url)`) to HTML `<img>` tags
 - Converts GitHub user-attachment video URLs to HTML `<video>` tags
-- Customizable width settings for both images and videos
+- Customizable width and height settings for both images and videos
+- Option to overwrite width/height attributes of existing img/video tags (enabled by default)
 
 ### 2. Markdown Table Conversion
 - Converts selected text into a properly formatted Markdown table
@@ -41,10 +42,13 @@ A Chrome extension that enhances your GitHub commenting experience with useful f
 
 ### Configuration
 1. Click on the extension icon and select "Options"
-2. Set your preferred image and video widths (in pixels)
-3. Configure table headers for each column
-4. Set column alignments (left, center, right)
-5. Save your settings
+2. Set your preferred image and video dimensions:
+   - Image width and height (in pixels)
+   - Video width and height (in pixels)
+3. Enable/disable overwriting of existing img/video tag dimensions
+4. Configure table headers for each column
+5. Set column alignments (left, center, right)
+6. Save your settings
 
 ## Requirements
 - Google Chrome browser
