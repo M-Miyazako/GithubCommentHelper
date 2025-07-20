@@ -61,9 +61,11 @@ function applyTextReplacement(resultText) {
 
 function replaceMedia(inputString) {
   return new Promise((resolve) => {
-    chrome.storage.sync.get(['imageWidth', 'videoWidth', 'overwriteExisting'], (result) => {
+    chrome.storage.sync.get(['imageWidth', 'imageHeight', 'videoWidth', 'videoHeight', 'overwriteExisting'], (result) => {
       let imageWidth = result.imageWidth ? ` width="${result.imageWidth}"` : '';
+      let imageHeight = result.imageHeight ? ` height="${result.imageHeight}"` : '';
       let videoWidth = result.videoWidth ? ` width="${result.videoWidth}"` : '';
+      let videoHeight = result.videoHeight ? ` height="${result.videoHeight}"` : '';
       let overwriteExisting = result.overwriteExisting !== undefined ? result.overwriteExisting : true; // デフォルトはtrue
       let outputString = inputString;
       // 既存のimgタグの幅/高さを上書きする処理
@@ -73,9 +75,12 @@ function replaceMedia(inputString) {
           // 既存のwidth/height属性を削除
           let newAttributes = attributes.replace(/\s*(width|height)=["'][^"']*["']/gi, '');
           
-          // 新しいwidth属性を追加（設定されている場合）
+          // 新しいwidth/height属性を追加（設定されている場合）
           if (result.imageWidth) {
             newAttributes += ` width="${result.imageWidth}"`;
+          }
+          if (result.imageHeight) {
+            newAttributes += ` height="${result.imageHeight}"`;
           }
           
           return `<img${newAttributes}>`;
@@ -86,9 +91,12 @@ function replaceMedia(inputString) {
           // 既存のwidth/height属性を削除
           let newAttributes = attributes.replace(/\s*(width|height)=["'][^"']*["']/gi, '');
           
-          // 新しいwidth属性を追加（設定されている場合）
+          // 新しいwidth/height属性を追加（設定されている場合）
           if (result.videoWidth) {
             newAttributes += ` width="${result.videoWidth}"`;
+          }
+          if (result.videoHeight) {
+            newAttributes += ` height="${result.videoHeight}"`;
           }
           
           return `<video${newAttributes}${closing}`;
@@ -96,7 +104,7 @@ function replaceMedia(inputString) {
       }
       
       if (outputString.includes('![')) {
-        outputString = outputString.replace(/!\[(.*?)\]\((.*?)\)/g, `<img src="$2"${imageWidth} alt="$1">`);
+        outputString = outputString.replace(/!\[(.*?)\]\((.*?)\)/g, `<img src="$2"${imageWidth}${imageHeight} alt="$1">`);
       }
       if (outputString.includes('https://github.com/user-attachments/assets/')) {
         // URL付き画像/動画タグとスタンドアロンURLの両方を抽出する
@@ -145,7 +153,7 @@ function replaceMedia(inputString) {
         for (const match of matches) {
           if (!match.hasTag) {
             outputString = outputString.substring(0, match.index) + 
-                          `<video src="${match.url}"${videoWidth} />` + 
+                          `<video src="${match.url}"${videoWidth}${videoHeight} />` + 
                           outputString.substring(match.index + match.fullMatch.length);
           }
         }

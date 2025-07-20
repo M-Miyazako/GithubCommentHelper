@@ -2,7 +2,9 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     const imageWidthInput = document.getElementById('imageWidth');
+    const imageHeightInput = document.getElementById('imageHeight');
     const videoWidthInput = document.getElementById('videoWidth');
+    const videoHeightInput = document.getElementById('videoHeight');
     const saveButton = document.getElementById('saveButton');
     const tableHeadersContainer = document.getElementById('tableHeadersContainer');
     const addHeaderBtn = document.getElementById('addHeaderBtn');
@@ -18,7 +20,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('pageTitle').textContent = chrome.i18n.getMessage('optionsTitle');
     document.getElementById('optionsHeader').textContent = chrome.i18n.getMessage('optionsHeader');
     document.getElementById('imageWidthLabel').textContent = chrome.i18n.getMessage('imageWidthLabel');
+    document.getElementById('imageHeightLabel').textContent = chrome.i18n.getMessage('imageHeightLabel');
     document.getElementById('videoWidthLabel').textContent = chrome.i18n.getMessage('videoWidthLabel');
+    document.getElementById('videoHeightLabel').textContent = chrome.i18n.getMessage('videoHeightLabel');
     document.getElementById('tableHeadersLabel').textContent = chrome.i18n.getMessage('tableHeadersLabel');
     document.getElementById('addHeaderBtn').textContent = chrome.i18n.getMessage('addHeaderBtn');
     document.getElementById('saveButton').textContent = chrome.i18n.getMessage('saveButton');
@@ -34,12 +38,18 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('overwriteExistingLabel').textContent = chrome.i18n.getMessage('overwriteExistingLabel');
 
     // ストレージから設定を読み込む
-    chrome.storage.sync.get(['imageWidth', 'videoWidth', 'tableHeaders', 'columnAlignments', 'defaultAlignment', 'overwriteExisting'], (result) => {
+    chrome.storage.sync.get(['imageWidth', 'imageHeight', 'videoWidth', 'videoHeight', 'tableHeaders', 'columnAlignments', 'defaultAlignment', 'overwriteExisting'], (result) => {
         if (result.imageWidth !== undefined) {
             imageWidthInput.value = result.imageWidth;
         }
+        if (result.imageHeight !== undefined) {
+            imageHeightInput.value = result.imageHeight;
+        }
         if (result.videoWidth !== undefined) {
             videoWidthInput.value = result.videoWidth;
+        }
+        if (result.videoHeight !== undefined) {
+            videoHeightInput.value = result.videoHeight;
         }
         
         // overwriteExisting設定の読み込み（デフォルトはtrue）
@@ -223,7 +233,9 @@ document.addEventListener('DOMContentLoaded', () => {
     saveButton.addEventListener('click', () => {
         // 入力値を取得
         let imageWidthValue = parseInt(imageWidthInput.value, 10);
+        let imageHeightValue = parseInt(imageHeightInput.value, 10);
         let videoWidthValue = parseInt(videoWidthInput.value, 10);
+        let videoHeightValue = parseInt(videoHeightInput.value, 10);
         
         // テーブルヘッダーの値を取得
         const headerInputs = document.querySelectorAll('.header-input');
@@ -261,10 +273,22 @@ document.addEventListener('DOMContentLoaded', () => {
             keysToRemove.push('imageWidth');
         }
         
+        if (!isNaN(imageHeightValue) && imageHeightValue > 0) {
+            dataToSave.imageHeight = imageHeightValue;
+        } else {
+            keysToRemove.push('imageHeight');
+        }
+        
         if (!isNaN(videoWidthValue) && videoWidthValue > 0) {
             dataToSave.videoWidth = videoWidthValue;
         } else {
             keysToRemove.push('videoWidth');
+        }
+        
+        if (!isNaN(videoHeightValue) && videoHeightValue > 0) {
+            dataToSave.videoHeight = videoHeightValue;
+        } else {
+            keysToRemove.push('videoHeight');
         }
         
         // テーブルヘッダーと寄せ方向の保存条件を分ける

@@ -31,9 +31,17 @@
     "message": "Image width (px):",
     "description": "Label for image width input"
   },
+  "imageHeightLabel": {
+    "message": "Image height (px):",
+    "description": "Label for image height input"
+  },
   "videoWidthLabel": {
     "message": "Video width (px):",
     "description": "Label for video width input"
+  },
+  "videoHeightLabel": {
+    "message": "Video height (px):",
+    "description": "Label for video height input"
   },
   "saveButton": {
     "message": "Save",

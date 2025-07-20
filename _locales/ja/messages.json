@@ -31,9 +31,17 @@
     "message": "画像の幅 (px):",
     "description": "画像幅入力のラベル"
   },
+  "imageHeightLabel": {
+    "message": "画像の高さ (px):",
+    "description": "画像高さ入力のラベル"
+  },
   "videoWidthLabel": {
     "message": "動画の幅 (px):",
     "description": "動画幅入力のラベル"
+  },
+  "videoHeightLabel": {
+    "message": "動画の高さ (px):",
+    "description": "動画高さ入力のラベル"
   },
   "saveButton": {
     "message": "保存",
